@@ -293,26 +293,26 @@ Các file `public/models/`, `public/wasm/`, `public/assets/` phải được com
 
 ## 11. Xử lý sự cố
 
-| Hiện tượng                                 | Cách xử lý                                                                                                          |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| “Bạn đã từ chối quyền camera”              | Bấm ổ khoá/camera trên thanh địa chỉ → Cho phép → tải lại. iOS: Cài đặt → Safari → Camera → Cho phép/Hỏi.           |
-| “Camera đang bị ứng dụng khác sử dụng”     | Đóng Zoom/Meet/Teams/OBS/Camera… rồi bấm Thử lại. Kiểm tra Cài đặt → Quyền riêng tư → Camera (Windows).             |
-| “Không tìm thấy camera”                    | Kiểm tra webcam, cáp, quyền hệ thống; thử trình duyệt khác.                                                         |
-| “Trang chưa chạy trên HTTPS”               | Dùng `npm run dev` (HTTPS tự ký) hoặc link GitHub Pages. Không dùng `http://<IP>`.                                  |
-| Mở trong Zalo/Facebook/Messenger           | Cảnh báo hiện ở màn hình bắt đầu; bấm **Sao chép link** rồi mở bằng Chrome/Safari.                                  |
-| “Không khởi động được bộ nhận diện cử chỉ” | Bật tăng tốc phần cứng/WebGL, cập nhật Chrome/Edge/Safari; hoặc chơi bằng bàn phím/cảm ứng.                         |
-| Không thấy ảnh con vật                     | Chạy `npm run sync-assets`, kiểm tra cặp `xxx` + `xxx_2`, rồi tải lại. Nếu pool rỗng game báo rõ.                   |
-| Trang Pages trắng / 404 asset              | Kiểm tra **Settings → Pages** đã chọn GitHub Actions; kiểm tra `VITE_BASE` khớp tên repo; chờ deploy xong.          |
-| Không có nút toàn màn hình                 | iPhone Safari không hỗ trợ Fullscreen API → nút được ẩn có chủ đích.                                                |
-| Không có nút đổi camera                    | Máy chỉ có 1 camera (hoặc trình duyệt không liệt kê được) → nút ẩn.                                                 |
-| Máy yếu, giật                              | Game tự hạ tần suất suy luận/độ phân giải và tắt skeleton/confetti. Có thể tắt skeleton thủ công.                   |
-| `npm run setup` lỗi                        | Kiểm tra mạng, Node ≥ 20.19, chạy `npm install` trước; xoá `public/models/gesture_recognizer.task` nếu file tải dở. |
+| Hiện tượng                                 | Cách xử lý                                                                                                              |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| “Bạn đã từ chối quyền camera”              | Bấm ổ khoá/camera trên thanh địa chỉ → Cho phép → tải lại. iOS: Cài đặt → Safari → Camera → Cho phép/Hỏi.               |
+| “Camera đang bị ứng dụng khác sử dụng”     | Đóng Zoom/Meet/Teams/OBS/Camera… rồi bấm Thử lại. Kiểm tra Cài đặt → Quyền riêng tư → Camera (Windows).                 |
+| “Không tìm thấy camera”                    | Kiểm tra webcam, cáp, quyền hệ thống; thử trình duyệt khác. Trên GIGABYTE G5 KC, nhấn **Fn + F10** để bật nguồn webcam. |
+| “Trang chưa chạy trên HTTPS”               | Dùng `npm run dev` (HTTPS tự ký) hoặc link GitHub Pages. Không dùng `http://<IP>`.                                      |
+| Mở trong Zalo/Facebook/Messenger           | Cảnh báo hiện ở màn hình bắt đầu; bấm **Sao chép link** rồi mở bằng Chrome/Safari.                                      |
+| “Không khởi động được bộ nhận diện cử chỉ” | Bật tăng tốc phần cứng/WebGL, cập nhật Chrome/Edge/Safari; hoặc chơi bằng bàn phím/cảm ứng.                             |
+| Không thấy ảnh con vật                     | Chạy `npm run sync-assets`, kiểm tra cặp `xxx` + `xxx_2`, rồi tải lại. Nếu pool rỗng game báo rõ.                       |
+| Trang Pages trắng / 404 asset              | Kiểm tra **Settings → Pages** đã chọn GitHub Actions; kiểm tra `VITE_BASE` khớp tên repo; chờ deploy xong.              |
+| Không có nút toàn màn hình                 | iPhone Safari không hỗ trợ Fullscreen API → nút được ẩn có chủ đích.                                                    |
+| Không có nút đổi camera                    | Máy chỉ có 1 camera (hoặc trình duyệt không liệt kê được) → nút ẩn.                                                     |
+| Máy yếu, giật                              | Game tự hạ tần suất suy luận/độ phân giải và tắt skeleton/confetti. Có thể tắt skeleton thủ công.                       |
+| `npm run setup` lỗi                        | Kiểm tra mạng, Node ≥ 20.19, chạy `npm install` trước; xoá `public/models/gesture_recognizer.task` nếu file tải dở.     |
 
 ---
 
 ## 12. Hạn chế đã biết
 
-- **Chưa test trên webcam/điện thoại thật** trong quá trình phát triển — mới test Chromium headless với camera giả và màn hình mô phỏng. Độ chính xác cử chỉ, FPS và hành vi wake lock/fullscreen có thể khác trên thiết bị thật.
+- Đã thử **camera thật** (Chicony USB2.0 Camera trên GIGABYTE G5 KC) bằng Chrome với bản GitHub Pages: video 640×480, model chạy, không có request ra ngoài. **Cử chỉ tay thật và điện thoại vẫn cần kiểm tra thêm**; độ chính xác, FPS và hành vi wake lock/fullscreen có thể khác trên thiết bị thật.
 - Model + wasm + ảnh khá nặng (model ~8 MB, wasm ~14 MB). Lần tải đầu có thể lâu; chưa có service worker/PWA để chơi offline hoàn toàn.
 - Chỉ nhận **một tay**, chỉ vuốt **ngang**, và cần đủ sáng. Góc tay/quá xa camera làm giảm độ chính xác.
 - Nhận diện trình duyệt nhúng dựa trên User-Agent, có thể bỏ sót ứng dụng mới.
