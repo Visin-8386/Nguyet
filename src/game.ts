@@ -414,8 +414,9 @@ export class Game {
       }
     }
 
-    // Slot machine
-    if (this.state === "SPINNING" && timestamp - this.lastSlotAt >= GAME.slotMs) {
+    // Slot machine: chỉ quay khi có tay (chế độ camera) hoặc chế độ bàn phím.
+    const hasHand = this.mode === "keyboard" || !!this.engine?.handDetected;
+    if (this.state === "SPINNING" && hasHand && timestamp - this.lastSlotAt >= GAME.slotMs) {
       this.lastSlotAt = timestamp;
       this.spinOnce();
     }

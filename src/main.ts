@@ -225,7 +225,18 @@ async function startGame(withCamera: boolean): Promise<void> {
 }
 
 startButton.addEventListener("click", () => void startGame(true));
-noCameraButton.addEventListener("click", () => void startGame(false));
+noCameraButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  void startGame(false);
+});
+
+// Chạm bất kỳ đâu trên màn hình bắt đầu cũng bắt đầu (đỡ phải bấm đúng nút).
+view.startScreen.addEventListener("click", (event) => {
+  if (busy) return;
+  const target = event.target as HTMLElement | null;
+  if (target && target.closest("#btn-start-no-camera, #btn-copy-link")) return;
+  void startGame(true);
+});
 
 /* ------------------------------------------------------------------ */
 /* Kích thước lại canvas + dọn dẹp khi rời trang                       */
