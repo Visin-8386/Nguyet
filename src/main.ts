@@ -256,3 +256,16 @@ window.addEventListener("pageshow", (event) => {
 });
 
 setupInAppWarning();
+
+// Service worker cache model/wasm/ảnh để lần sau tải nhanh hơn (nếu trình duyệt hỗ trợ).
+// Chỉ đăng ký trên HTTPS thật (không phải localhost/Playwright) để tránh lỗi chứng chỉ tự ký.
+if (
+  "serviceWorker" in navigator &&
+  location.hostname !== "localhost" &&
+  location.hostname !== "127.0.0.1"
+) {
+  const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+  navigator.serviceWorker.register(swUrl).catch((error) => {
+    console.warn("[main] Service worker không đăng ký được:", error);
+  });
+}

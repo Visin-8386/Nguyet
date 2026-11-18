@@ -10,6 +10,7 @@ export default tseslint.config(
       "public/wasm",
       "public/models",
       "public/assets",
+      "public/sw.js",
       "playwright-report",
       "test-results",
       "coverage",
