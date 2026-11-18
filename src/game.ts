@@ -82,6 +82,8 @@ export class Game {
 
   private lastHandSeenAt = now();
   private introLastActivityAt = now();
+  private lastSwipeAt = 0;
+  private lastSwipeDir = "—";
 
   private skeletonEnabled = true;
   private perfLevel = 1;
@@ -192,6 +194,9 @@ export class Game {
         this.dispatch("FIST");
         break;
       case "swipe":
+        this.lastSwipeAt = now();
+        this.lastSwipeDir = event.direction === "right" ? "trái→phải" : "phải→trái";
+        console.log("[Game] SWIPE", event.direction, "state=", this.state);
         this.dispatch(event.direction === "right" ? "SWIPE_LR" : "SWIPE_RL");
         break;
       case "hand-found":
@@ -439,6 +444,7 @@ export class Game {
         mode: this.mode === "camera" ? "camera" : "bàn phím / cảm ứng",
         perfLevel: this.perfLevel,
         delegate: this.engine?.delegate ?? "—",
+        swipe: this.lastSwipeAt ? `${this.lastSwipeDir} @${Math.round(this.lastSwipeAt)}` : "—",
       });
     }
 

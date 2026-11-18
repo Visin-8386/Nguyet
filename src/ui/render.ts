@@ -47,6 +47,7 @@ export interface DebugInfo {
   mode: string;
   perfLevel: number;
   delegate: string;
+  swipe: string;
 }
 
 export class GameView {
@@ -84,6 +85,7 @@ export class GameView {
     infer: must<HTMLElement>("dbg-infer"),
     state: must<HTMLElement>("dbg-state"),
     gesture: must<HTMLElement>("dbg-gesture"),
+    swipe: must<HTMLElement>("dbg-swipe"),
     score: must<HTMLElement>("dbg-score"),
     hand: must<HTMLElement>("dbg-hand"),
     mode: must<HTMLElement>("dbg-mode"),
@@ -263,6 +265,7 @@ export class GameView {
     this.dbg.infer.textContent = info.inferenceMs.toFixed(1);
     this.dbg.state.textContent = `${info.state} (${STATE_SHORT[info.state]})`;
     this.dbg.gesture.textContent = info.gesture;
+    this.dbg.swipe.textContent = info.swipe;
     this.dbg.score.textContent = info.score.toFixed(2);
     this.dbg.hand.textContent = info.hand ? "có" : "không";
     this.dbg.mode.textContent = info.mode;

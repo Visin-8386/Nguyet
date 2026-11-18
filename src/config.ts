@@ -34,8 +34,8 @@ export const GESTURE = {
   exitScore: 0.45,
   /** Cử chỉ phải ổn định liên tục >= 80ms mới được xác nhận. */
   stableMs: 80,
-  /** Mất tay quá 400ms thì coi là không có tay. */
-  handLostMs: 400,
+  /** Mất tay quá 800ms thì coi là không có tay (chịu được tracking chập chờn). */
+  handLostMs: 800,
   /** Bàn tay nhỏ hơn ~28px (quá xa camera) thì không kiểm tra landmark nữa. */
   minHandSizePx: 28,
 };
