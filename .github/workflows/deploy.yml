@@ -49,6 +49,9 @@ jobs:
 
       - name: Cấu hình Pages
         uses: actions/configure-pages@v5
+        with:
+          # Tự bật Pages (nguồn GitHub Actions) nếu repo chưa bật.
+          enablement: true
 
       - name: Đóng gói thư mục dist
         uses: actions/upload-pages-artifact@v3
