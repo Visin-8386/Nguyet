@@ -13,6 +13,9 @@
     />
     <title>Bắt con vật bằng cử chỉ tay</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <!-- Tải sớm model + wasm để rút ngắn thời gian chờ -->
+    <link rel="preload" href="./models/gesture_recognizer.task" as="fetch" crossorigin />
+    <link rel="preload" href="./wasm/vision_wasm_internal.wasm" as="fetch" crossorigin />
   </head>
   <body>
     <!-- Nền camera + lớp tối + skeleton + confetti -->

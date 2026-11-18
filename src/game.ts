@@ -136,7 +136,7 @@ export class Game {
 
     try {
       if (withCamera) {
-        onStage?.("Đang bật camera và tải bộ nhận diện…");
+        onStage?.("Đang bật camera và tải bộ nhận diện AI (có thể mất 10–30 giây)…");
         this.camera = new Camera(this.view.video);
         // Model không phụ thuộc camera → bắt đầu tải model ngay, song song với camera.
         const enginePromise = GestureEngine.create(this.view.video);
