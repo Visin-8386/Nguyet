@@ -197,7 +197,17 @@ export class Game {
         this.lastSwipeAt = now();
         this.lastSwipeDir = event.direction === "right" ? "trái→phải" : "phải→trái";
         console.log("[Game] SWIPE", event.direction, "state=", this.state);
-        this.dispatch(event.direction === "right" ? "SWIPE_LR" : "SWIPE_RL");
+        // Nếu đang ở CAUGHT (chưa mở hộp), tự mở hộp rồi kéo poster luôn.
+        if (this.state === "CAUGHT") {
+          this.dispatch("OPEN");
+          window.setTimeout(() => {
+            if (this.state === "REVEAL") {
+              this.dispatch(event.direction === "right" ? "SWIPE_LR" : "SWIPE_RL");
+            }
+          }, 500);
+        } else {
+          this.dispatch(event.direction === "right" ? "SWIPE_LR" : "SWIPE_RL");
+        }
         break;
       case "hand-found":
         this.lastHandSeenAt = now();
