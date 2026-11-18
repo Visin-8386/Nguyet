@@ -197,6 +197,8 @@ export class Game {
         this.lastSwipeAt = now();
         this.lastSwipeDir = event.direction === "right" ? "trái→phải" : "phải→trái";
         console.log("[Game] SWIPE", event.direction, "state=", this.state);
+        this.view.game.classList.add("swipe-toast");
+        window.setTimeout(() => this.view.game.classList.remove("swipe-toast"), 800);
         // Nếu đang ở CAUGHT (chưa mở hộp), tự mở hộp rồi kéo poster luôn.
         if (this.state === "CAUGHT") {
           this.dispatch("OPEN");

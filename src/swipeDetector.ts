@@ -111,7 +111,7 @@ export class SwipeDetector {
     if (sample.isOpen) this.lastOpenT = now;
     // Grace 400ms: trong lúc vuốt nhanh, landmark open có thể bị mất tạm thời
     // mà không nên huỷ toàn bộ theo dõi.
-    const effectivelyOpen = sample.isOpen || now - this.lastOpenT <= 400;
+    const effectivelyOpen = sample.isOpen || now - this.lastOpenT <= 800;
 
     // Tay thực sự nắm (không mở và quá grace) → không thể là vuốt: xoá sạch.
     if (!effectivelyOpen) {

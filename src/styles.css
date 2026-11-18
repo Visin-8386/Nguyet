@@ -444,6 +444,39 @@ body.no-camera #overlay-canvas {
 /* Khu vực chơi                                                        */
 /* ------------------------------------------------------------------ */
 
+.game.swipe-toast::after {
+  content: "✅ Đã nhận vuốt";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: rgba(52, 211, 153, 0.92);
+  color: #052e1b;
+  font-size: 1.3rem;
+  font-weight: 800;
+  z-index: 999;
+  pointer-events: none;
+  animation: swipe-toast-fade 0.8s ease-out forwards;
+}
+@keyframes swipe-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+}
 .game {
   position: fixed;
   inset: 0;
