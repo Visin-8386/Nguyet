@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bonong",
+    "label": "Bồ nông",
+    "animal": "assets/bonong.webp",
+    "intro": "assets/bonong_2.webp"
+  },
+  {
+    "id": "casau",
+    "label": "Cá sấu hoa cà",
+    "animal": "assets/casau.webp",
+    "intro": "assets/casau_2.webp"
+  },
+  {
+    "id": "ho",
+    "label": "Hổ Đông Dương",
+    "animal": "assets/ho.webp",
+    "intro": "assets/ho_2.webp"
+  },
+  {
+    "id": "mi",
+    "label": "Mi Langbian",
+    "animal": "assets/mi.webp",
+    "intro": "assets/mi_2.webp"
+  }
+]

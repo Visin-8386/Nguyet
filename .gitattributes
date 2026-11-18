@@ -1,0 +1,10 @@
+# Chuẩn hoá line ending: mọi file text dùng LF (khớp Prettier endOfLine: "lf").
+* text=auto eol=lf
+
+# Tài nguyên nhị phân — không chuyển đổi.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.task binary
+*.wasm binary

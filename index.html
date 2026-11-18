@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
+    />
+    <meta name="theme-color" content="#0b1020" />
+    <meta
+      name="description"
+      content="Trò chơi bắt con vật bằng cử chỉ tay qua webcam. Hình ảnh camera chỉ xử lý trên máy bạn, không gửi đi đâu."
+    />
+    <title>Bắt con vật bằng cử chỉ tay</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body>
+    <!-- Nền camera + lớp tối + skeleton + confetti -->
+    <video id="camera-video" playsinline muted autoplay aria-hidden="true"></video>
+    <div id="dim" aria-hidden="true"></div>
+    <canvas id="overlay-canvas" aria-hidden="true"></canvas>
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <!-- Màn hình khởi động -->
+    <section id="start-screen" class="screen">
+      <div class="start-card">
+        <div class="logo" aria-hidden="true">🐾</div>
+        <h1>Bắt con vật<br /><span>bằng cử chỉ tay</span></h1>
+        <p class="tagline">
+          Xòe tay để quay số, nắm tay để bắt, vuốt tay để xem thông tin — tất cả bằng webcam.
+        </p>
+        <div class="steps" aria-label="Cách chơi">
+          <div class="step">
+            <span class="step-icon">🖐</span><span>Xòe tay<br /><small>Quay số</small></span>
+          </div>
+          <div class="step">
+            <span class="step-icon">✊</span><span>Nắm tay<br /><small>Bắt con vật</small></span>
+          </div>
+          <div class="step">
+            <span class="step-icon">👉</span><span>Vuốt tay<br /><small>Xem thông tin</small></span>
+          </div>
+        </div>
+        <div class="start-actions">
+          <button id="start-button" class="btn btn-primary" type="button">Bắt đầu</button>
+          <button id="btn-start-no-camera" class="btn btn-ghost" type="button">
+            Chơi không cần camera
+          </button>
+        </div>
+        <p class="privacy">🔒 Hình ảnh camera chỉ xử lý trên máy bạn, không gửi đi đâu.</p>
+        <p class="keyboard-hint">
+          Không có camera? Dùng bàn phím: <b>Space</b> = xòe · <b>F</b> = nắm · <b>→</b> = vuốt phải
+          · <b>←</b> = vuốt trái, hoặc 3 nút cảm ứng trong game.
+        </p>
+        <div id="inapp-warning" class="warn-box" role="alert" hidden>
+          <p id="inapp-warning-text"></p>
+          <button id="btn-copy-link" class="btn btn-ghost" type="button">Sao chép link</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Màn hình tải ảnh -->
+    <section id="loading-screen" class="screen" hidden>
+      <div class="loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loading-text" class="loading-title">Đang tải hình con vật…</p>
+        <p id="loading-percent" class="loading-percent">0%</p>
+        <div class="progress-track" role="progressbar" aria-label="Tiến trình tải ảnh">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Khu vực chơi -->
+    <main id="game" class="game" data-state="WAITING" hidden>
+      <div class="top-bar">
+        <div id="hand-indicator" class="hand-indicator is-missing" role="status">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="hand-indicator-text">Chưa thấy tay</span>
+        </div>
+        <div id="state-label" class="state-label" aria-live="polite">Đang chờ bàn tay</div>
+      </div>
+
+      <div id="card-area" class="card-area">
+        <div class="card-scene">
+          <div id="card" class="card">
+            <div class="card-face card-front">
+              <div id="idle-hint" class="idle-hint" aria-hidden="true">
+                <span class="paw">🐾</span>
+                <span>Sẵn sàng chưa?</span>
+              </div>
+              <img id="animal-image" alt="" draggable="false" />
+              <div id="animal-name" class="animal-name"></div>
+            </div>
+            <div class="card-face card-back">
+              <div id="mystery-box" class="mystery-box" aria-hidden="true">?</div>
+            </div>
+          </div>
+        </div>
+        <img id="intro-image" class="intro-image" alt="" draggable="false" hidden />
+      </div>
+
+      <div class="hud">
+        <div id="guide" class="guide" aria-live="polite">
+          <span id="guide-icon" class="guide-icon" aria-hidden="true">🖐</span>
+          <span id="guide-text">Giơ 5 ngón tay lên để bắt đầu</span>
+        </div>
+
+        <div id="touch-controls" class="touch-controls" aria-label="Điều khiển bằng cảm ứng">
+          <button id="btn-open" class="btn btn-gesture" type="button">
+            <span aria-hidden="true">🖐</span> Xòe
+          </button>
+          <button id="btn-fist" class="btn btn-gesture" type="button">
+            <span aria-hidden="true">✊</span> Nắm
+          </button>
+          <button id="btn-swipe" class="btn btn-gesture btn-swipe" type="button">
+            <span aria-hidden="true">👉</span> Vuốt
+          </button>
+        </div>
+
+        <div id="toolbar" class="toolbar" aria-label="Công cụ">
+          <button id="btn-replay" class="btn btn-tool" type="button">↻ Chơi lại</button>
+          <button id="btn-camera" class="btn btn-tool" type="button" hidden>⟳ Camera</button>
+          <button id="btn-sound" class="btn btn-tool" type="button" aria-label="Tắt tiếng">
+            🔊
+          </button>
+          <button
+            id="btn-skeleton"
+            class="btn btn-tool"
+            type="button"
+            aria-label="Bật/tắt skeleton"
+          >
+            🖐
+          </button>
+          <button id="btn-fullscreen" class="btn btn-tool" type="button" aria-label="Toàn màn hình">
+            ⛶
+          </button>
+          <button id="btn-debug" class="btn btn-tool" type="button" aria-label="Bật/tắt debug">
+            📊
+          </button>
+        </div>
+      </div>
+
+      <section id="debug-panel" class="debug-panel" hidden aria-label="Thông tin debug">
+        <div>FPS: <span id="dbg-fps">–</span></div>
+        <div>Suy luận: <span id="dbg-infer">–</span> ms</div>
+        <div>Trạng thái: <span id="dbg-state">–</span></div>
+        <div>Cử chỉ: <span id="dbg-gesture">–</span></div>
+        <div>Độ tin cậy: <span id="dbg-score">–</span></div>
+        <div>Tay: <span id="dbg-hand">–</span></div>
+        <div>Chế độ: <span id="dbg-mode">–</span></div>
+        <div>Mức hiệu năng: <span id="dbg-perf">–</span></div>
+        <div>Delegate: <span id="dbg-delegate">–</span></div>
+      </section>
+    </main>
+
+    <!-- Màn hình lỗi -->
+    <section id="error-screen" class="screen error-screen" hidden>
+      <div class="error-card" role="alert">
+        <div class="error-icon" aria-hidden="true">⚠️</div>
+        <h2 id="error-title">Có lỗi xảy ra</h2>
+        <p id="error-hint"></p>
+        <div class="error-actions">
+          <button id="btn-error-retry" class="btn btn-primary" type="button">Thử lại</button>
+          <button id="btn-error-no-camera" class="btn btn-ghost" type="button">
+            Chơi bằng bàn phím
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <noscript>
+      <div class="noscript">Trang cần JavaScript để chạy. Hãy bật JavaScript rồi tải lại.</div>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
