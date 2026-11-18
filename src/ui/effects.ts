@@ -95,9 +95,11 @@ export function slideIntroIn(
   for (let i = 0; i <= steps; i += 1) {
     const x = i === steps ? 0 : spring.step(0, dt);
     const progress = i / steps;
+    const rot = (1 - progress) * (fromRight ? 8 : -8);
+    const scale = 0.85 + progress * 0.15;
     frames.push({
       offset: progress,
-      transform: `translate3d(${x}px, 0, 0)`,
+      transform: `translate3d(${x}px, 0, 0) rotate(${rot}deg) scale(${scale})`,
       filter: `blur(${Math.min(9, Math.abs(spring.velocity) * 0.012).toFixed(2)}px)`,
       opacity: Math.min(1, 0.15 + progress * 3),
     });
