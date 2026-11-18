@@ -95,8 +95,9 @@ export function slideIntroIn(
   for (let i = 0; i <= steps; i += 1) {
     const x = i === steps ? 0 : spring.step(0, dt);
     const progress = i / steps;
-    const rot = (1 - progress) * (fromRight ? 8 : -8);
-    const scale = 0.85 + progress * 0.15;
+    // Xoay 3 vòng (1080°) trong lúc trượt vào.
+    const rot = (1 - progress) * (fromRight ? 1080 : -1080);
+    const scale = 0.7 + progress * 0.3;
     frames.push({
       offset: progress,
       transform: `translate3d(${x}px, 0, 0) rotate(${rot}deg) scale(${scale})`,

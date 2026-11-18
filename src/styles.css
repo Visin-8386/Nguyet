@@ -713,7 +713,7 @@ body.no-camera #overlay-canvas {
   height: 100%;
   padding: clamp(4px, 1.5vw, 14px);
   border-radius: 24px;
-  background: rgba(4, 8, 18, 0.93);
+  background: transparent;
   object-fit: contain;
   -webkit-user-drag: none;
   will-change: transform, opacity;
