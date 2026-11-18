@@ -84,6 +84,7 @@ export class Game {
   private introLastActivityAt = now();
   private lastSwipeAt = 0;
   private lastSwipeDir = "—";
+  private lastSwipeFromRight = false;
 
   private skeletonEnabled = false;
   private perfLevel = 1;
@@ -197,6 +198,7 @@ export class Game {
       case "swipe":
         this.lastSwipeAt = now();
         this.lastSwipeDir = event.direction === "right" ? "trái→phải" : "phải→trái";
+        this.lastSwipeFromRight = event.direction === "left";
         console.log("[Game] SWIPE", event.direction, "state=", this.state);
         this.view.game.classList.add("swipe-toast");
         window.setTimeout(() => this.view.game.classList.remove("swipe-toast"), 800);
@@ -263,7 +265,7 @@ export class Game {
         this.lastHandSeenAt = now();
         break;
       case "INTRO":
-        if (this.caughtAnimal) this.view.showIntro(this.caughtAnimal);
+        if (this.caughtAnimal) this.view.showIntro(this.caughtAnimal, this.lastSwipeFromRight);
         this.audio.play("swipe");
         this.introLastActivityAt = now();
         break;

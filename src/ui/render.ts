@@ -188,14 +188,14 @@ export class GameView {
     });
   }
 
-  /** INTRO: ảnh poster trượt vào từ mép trái (spring + motion blur). */
-  showIntro(animal: AnimalAsset): void {
+  /** INTRO: ảnh poster trượt vào từ mép phù hợp với hướng vuốt. */
+  showIntro(animal: AnimalAsset, fromRight = false): void {
     this.introAnimation?.cancel();
     this.introImage.src = animal.intro;
     this.introImage.alt = `Giới thiệu: ${animal.label}`;
     this.cardArea.classList.add("intro-open");
     const distance = Math.min(window.innerWidth * 0.9, 900);
-    this.introAnimation = slideIntroIn(this.introImage, distance);
+    this.introAnimation = slideIntroIn(this.introImage, distance, fromRight);
   }
 
   hideIntro(): void {

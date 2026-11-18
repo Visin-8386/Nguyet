@@ -77,7 +77,11 @@ export function playSlotBlip(el: HTMLElement): void {
  * Đưa ảnh intro trượt vào từ mép trái bằng spring physics + motion blur nhẹ.
  * Trả về Animation để caller có thể huỷ khi đổi trạng thái đột ngột.
  */
-export function slideIntroIn(el: HTMLElement, distancePx: number): Animation | null {
+export function slideIntroIn(
+  el: HTMLElement,
+  distancePx: number,
+  fromRight = false,
+): Animation | null {
   el.hidden = false;
   if (prefersReducedMotion()) {
     el.style.transform = "translate3d(0,0,0)";
@@ -85,7 +89,7 @@ export function slideIntroIn(el: HTMLElement, distancePx: number): Animation | n
     return null;
   }
   const frames: Keyframe[] = [];
-  const spring = new Spring(150, 21, -distancePx);
+  const spring = new Spring(150, 21, fromRight ? distancePx : -distancePx);
   const steps = 48;
   const dt = 1 / 60;
   for (let i = 0; i <= steps; i += 1) {
