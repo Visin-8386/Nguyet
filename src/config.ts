@@ -32,8 +32,8 @@ export const GESTURE = {
   fistScore: 0.5,
   /** Ngưỡng hysteresis: khi đang giữ một cử chỉ, score chỉ cần >= giá trị này để không bị nhấp nháy. */
   exitScore: 0.45,
-  /** Cử chỉ phải ổn định liên tục >= 120ms mới được xác nhận. */
-  stableMs: 120,
+  /** Cử chỉ phải ổn định liên tục >= 80ms mới được xác nhận. */
+  stableMs: 80,
   /** Mất tay quá 400ms thì coi là không có tay. */
   handLostMs: 400,
   /** Bàn tay nhỏ hơn ~28px (quá xa camera) thì không kiểm tra landmark nữa. */
@@ -42,21 +42,21 @@ export const GESTURE = {
 
 export const SWIPE = {
   /** Cửa sổ thời gian tối đa cho một cú vuốt (ms). */
-  windowMs: 800,
+  windowMs: 600,
   /** Thời gian tối thiểu của một cú vuốt (ms) — tránh nhiễu 1 frame. */
-  minDurationMs: 200,
-  /** Quãng đường ngang phải >= 1.0 lần kích thước bàn tay. */
-  minHandSizeRatio: 1.0,
-  /** ...và >= 8% chiều rộng khung hình (chống vuốt nhầm khi tay quá gạo). */
-  minFrameRatio: 0.08,
-  /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.8 "bàn tay/giây". */
-  velocityHandsPerSec: 0.8,
-  /** Điều kiện vuốt ngang: |dy| <= 0.6 * |dx|. */
-  dyRatioMax: 0.6,
+  minDurationMs: 100,
+  /** Quãng đường ngang phải >= 1.5 lần kích thước bàn tay. */
+  minHandSizeRatio: 1.5,
+  /** ...và >= 10% chiều rộng khung hình. */
+  minFrameRatio: 0.1,
+  /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.3 "bàn tay/giây". */
+  velocityHandsPerSec: 0.3,
+  /** Điều kiện vuốt ngang: |dy| <= 0.5 * |dx|. */
+  dyRatioMax: 0.5,
   /** Nghỉ giữa 2 cú vuốt (ms). */
-  cooldownMs: 800,
-  /** Giữ lịch sử mẫu trong 900ms. */
-  bufferMs: 900,
+  cooldownMs: 600,
+  /** Giữ lịch sử mẫu trong 700ms. */
+  bufferMs: 700,
   /** Tham số One Euro Filter làm mượt toạ độ. */
   oneEuro: { freq: 30, minCutoff: 1.2, beta: 0.02 },
 };

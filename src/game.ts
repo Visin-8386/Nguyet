@@ -123,7 +123,7 @@ export class Game {
   /** Khởi động game (có hoặc không có camera). Có thể gọi lại sau lỗi camera. */
   async start(withCamera: boolean, onStage?: (text: string) => void): Promise<void> {
     if (this.started) return;
-    // Đưa UI về trạng thái chờ sạch sẽ
+    // Mặc định ở trạng thái chờ; chế độ camera sẽ tự chuyển sang quay số bên dưới.
     this.state = "WAITING";
     this.view.setState("WAITING");
     this.view.resetCardToFront();
@@ -133,8 +133,10 @@ export class Game {
 
     try {
       if (withCamera) {
-        onStage?.("Đang bật camera…");
+        onStage?.("Đang bật camera và tải bộ nhận diện…");
         this.camera = new Camera(this.view.video);
+        // Model không phụ thuộc camera → bắt đầu tải model ngay, song song với camera.
+        const enginePromise = GestureEngine.create(this.view.video);
         try {
           await this.camera.start({ facing: "user" });
         } catch (error) {
@@ -145,15 +147,17 @@ export class Game {
         const cameraCount = await Camera.countCameras();
         this.view.setCameraSwitchVisible(cameraCount > 1);
 
-        onStage?.("Đang tải bộ nhận diện cử chỉ…");
         try {
-          this.engine = await GestureEngine.create(this.view.video);
+          this.engine = await enginePromise;
         } catch (error) {
           throw new EngineStartError(error);
         }
         this.engine.setMirror(this.camera.mirrored);
         this.engine.on((event) => this.onGestureEvent(event));
         this.mode = "camera";
+        // Bỏ bước "sẵn sàng": vào thẳng quay số.
+        this.state = "SPINNING";
+        this.enterState("SPINNING");
         await this.requestWakeLock();
       } else {
         this.mode = "keyboard";

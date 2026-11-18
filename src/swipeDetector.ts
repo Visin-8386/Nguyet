@@ -68,7 +68,7 @@ export class SwipeDetector {
   private buffer: Sample[] = [];
   private state: TrackerState = "idle";
   private anchor: Sample | null = null;
-  private dir: 1 | -1 = 1;
+  private dir: -1 | 0 | 1 = 0;
   private armed = true;
   private reversedSince: number | null = null;
   private lastEmitT = -Infinity;
@@ -148,12 +148,11 @@ export class SwipeDetector {
         if (velocityHandsPerSec < this.cfg.velocityHandsPerSec * 0.4) this.armed = true;
         return null;
       }
-      if (velocityHandsPerSec >= this.cfg.velocityHandsPerSec && vxPerMs !== 0) {
-        this.state = "tracking";
-        this.anchor = { t: now, x: f.x, y: f.y };
-        this.dir = Math.sign(vxPerMs) > 0 ? 1 : -1;
-        this.reversedSince = null;
-      }
+      // Bắt đầu theo dõi ngay (không đòi vận tốc lớn) để vuốt chậm cũng nhận.
+      this.state = "tracking";
+      this.anchor = { t: now, x: f.x, y: f.y };
+      this.dir = 0;
+      this.reversedSince = null;
       return null;
     }
 
@@ -167,8 +166,13 @@ export class SwipeDetector {
     const dx = f.x - anchor.x;
     const dy = f.y - anchor.y;
 
+    // Xác định hướng ban đầu khi đã có chuyển động rõ rệt.
+    if (this.dir === 0 && Math.abs(dx) > 0.1 * Math.max(sample.handSize, 1)) {
+      this.dir = Math.sign(dx) > 0 ? 1 : -1;
+    }
+
     // Đổi chiều rõ rệt trong lúc vuốt → huỷ (tay run hoặc đổi hướng).
-    if (vxPerMs !== 0 && Math.sign(vxPerMs) !== this.dir) {
+    if (this.dir !== 0 && vxPerMs !== 0 && Math.sign(vxPerMs) !== this.dir) {
       if (this.reversedSince === null) this.reversedSince = now;
       if (now - this.reversedSince > 80) {
         this.state = "idle";
