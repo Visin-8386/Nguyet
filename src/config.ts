@@ -29,11 +29,11 @@ export const GESTURE = {
   /** Ngưỡng score để nhận "Open_Palm" (xòe tay). */
   openScore: 0.5,
   /** Ngưỡng score để nhận "Closed_Fist" (nắm tay). */
-  fistScore: 0.5,
+  fistScore: 0.4,
   /** Ngưỡng hysteresis: khi đang giữ một cử chỉ, score chỉ cần >= giá trị này để không bị nhấp nháy. */
   exitScore: 0.45,
-  /** Cử chỉ phải ổn định liên tục >= 80ms mới được xác nhận. */
-  stableMs: 80,
+  /** Cử chỉ phải ổn định liên tục >= 60ms mới được xác nhận. */
+  stableMs: 60,
   /** Mất tay quá 800ms thì coi là không có tay (chịu được tracking chập chờn). */
   handLostMs: 800,
   /** Bàn tay nhỏ hơn ~28px (quá xa camera) thì không kiểm tra landmark nữa. */
@@ -42,11 +42,11 @@ export const GESTURE = {
 
 export const SWIPE = {
   /** Cửa sổ thời gian tối đa cho một cú vuốt (ms). */
-  windowMs: 600,
+  windowMs: 800,
   /** Thời gian tối thiểu của một cú vuốt (ms) — tránh nhiễu 1 frame. */
   minDurationMs: 100,
-  /** Quãng đường ngang phải >= 1.5 lần kích thước bàn tay. */
-  minHandSizeRatio: 1.5,
+  /** Quãng đường ngang phải >= 0.3 lần kích thước bàn tay (rất dễ kéo). */
+  minHandSizeRatio: 0.3,
   /** ...và >= 10% chiều rộng khung hình. */
   minFrameRatio: 0.1,
   /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.3 "bàn tay/giây". */
@@ -54,9 +54,9 @@ export const SWIPE = {
   /** Điều kiện vuốt ngang: |dy| <= 0.5 * |dx|. */
   dyRatioMax: 0.5,
   /** Nghỉ giữa 2 cú vuốt (ms). */
-  cooldownMs: 600,
-  /** Giữ lịch sử mẫu trong 700ms. */
-  bufferMs: 700,
+  cooldownMs: 400,
+  /** Giữ lịch sử mẫu trong 800ms. */
+  bufferMs: 800,
   /** Tham số One Euro Filter làm mượt toạ độ. */
   oneEuro: { freq: 30, minCutoff: 1.2, beta: 0.02 },
 };
