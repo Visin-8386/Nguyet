@@ -22,11 +22,13 @@ const EXPECTED: Record<GameState, Partial<Record<GameEvent, GameState>>> = {
   CAUGHT: { OPEN: "REVEAL", TIMEOUT: "WAITING", RESTART: "SPINNING" },
   REVEAL: {
     SWIPE_LR: "INTRO",
+    SWIPE_RL: "INTRO",
     FIST: "SPINNING",
     TIMEOUT: "WAITING",
     RESTART: "SPINNING",
   },
   INTRO: {
+    SWIPE_LR: "REVEAL",
     SWIPE_RL: "REVEAL",
     FIST: "SPINNING",
     RESTART: "SPINNING",

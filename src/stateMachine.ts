@@ -50,11 +50,13 @@ export const TRANSITIONS: Record<GameState, Partial<Record<GameEvent, GameState>
   },
   REVEAL: {
     SWIPE_LR: "INTRO",
+    SWIPE_RL: "INTRO",
     FIST: "SPINNING",
     TIMEOUT: "WAITING",
     RESTART: "SPINNING",
   },
   INTRO: {
+    SWIPE_LR: "REVEAL",
     SWIPE_RL: "REVEAL",
     FIST: "SPINNING",
     RESTART: "SPINNING",

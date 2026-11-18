@@ -85,7 +85,7 @@ export class Game {
   private lastSwipeAt = 0;
   private lastSwipeDir = "—";
 
-  private skeletonEnabled = true;
+  private skeletonEnabled = false;
   private perfLevel = 1;
   private inferSkip = 1;
   private lastPerfAt = 0;
@@ -157,9 +157,10 @@ export class Game {
         this.engine.setMirror(this.camera.mirrored);
         this.engine.on((event) => this.onGestureEvent(event));
         this.mode = "camera";
-        // Bỏ bước "sẵn sàng": vào thẳng quay số.
-        this.state = "SPINNING";
-        this.enterState("SPINNING");
+        // Giữ trạng thái chờ: chỉ quay số khi nhận diện đủ 5 ngón.
+        this.state = "WAITING";
+        this.view.setState("WAITING");
+        this.view.showIdle();
         await this.requestWakeLock();
       } else {
         this.mode = "keyboard";
@@ -404,7 +405,6 @@ export class Game {
       if (timestamp - this.lastInferAt >= interval) {
         this.lastInferAt = timestamp;
         this.engine.process(timestamp);
-        this.overlay.render(this.engine.frame);
         if (this.engine.handDetected) this.lastHandSeenAt = timestamp;
 
         if (timestamp - this.lastIndicatorAt >= 200) {
@@ -495,7 +495,7 @@ export class Game {
     const filtered = this.palmFilter.filter(px, py, timestamp);
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
-    const scale = Math.max(0.7, Math.min(1.3, frame.handSize / 120));
+    const scale = Math.max(0.4, Math.min(0.8, frame.handSize / 200));
     scene.style.transition = "transform 0.12s linear";
     scene.style.transform = `translate3d(${filtered.x - centerX}px, ${filtered.y - centerY}px, 0) scale(${scale})`;
   }
