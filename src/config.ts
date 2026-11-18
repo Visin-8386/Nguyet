@@ -63,12 +63,12 @@ export const SWIPE = {
 
 export const CAMERA = {
   /** ideal cho camera trước/sau. */
-  width: 640,
-  height: 480,
+  width: 1280,
+  height: 720,
   frameRate: 30,
   /** Fallback khi máy yếu/thiết bị không đủ (tự thích ứng hiệu năng). */
-  fallbackWidth: 320,
-  fallbackHeight: 240,
+  fallbackWidth: 640,
+  fallbackHeight: 480,
   facingMode: "user" as const,
 };
 
