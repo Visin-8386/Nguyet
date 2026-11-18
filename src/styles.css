@@ -566,6 +566,7 @@ body.no-camera #overlay-canvas {
   align-items: center;
   justify-content: center;
   padding: 4px;
+  perspective: 1200px;
 }
 
 .card-scene {

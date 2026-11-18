@@ -100,7 +100,7 @@ export function slideIntroIn(
     const scale = 0.7 + progress * 0.3;
     frames.push({
       offset: progress,
-      transform: `translate3d(${x}px, 0, 0) rotate(${rot}deg) scale(${scale})`,
+      transform: `translate3d(${x}px, 0, 0) rotateY(${rot}deg) scale(${scale})`,
       filter: `blur(${Math.min(9, Math.abs(spring.velocity) * 0.012).toFixed(2)}px)`,
       opacity: Math.min(1, 0.15 + progress * 3),
     });
