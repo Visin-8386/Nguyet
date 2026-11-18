@@ -5,12 +5,13 @@
  */
 
 import { fetchAnimals, preloadAnimals, type AnimalAsset } from "./assets";
-import { Camera } from "./camera";
+import { Camera, computeCover } from "./camera";
 import { GAME, MEDIAPIPE, PERF } from "./config";
 import { GestureEngine, type GestureEvent } from "./gestureEngine";
 import { attachKeyboard, type GestureInputHandlers } from "./input/keyboard";
 import { attachTouchControls } from "./input/touch";
 import { transition, type GameEvent, type GameState } from "./stateMachine";
+import { OneEuroFilter2D } from "./oneEuroFilter";
 import { AudioEngine } from "./ui/audio";
 import { HandOverlay } from "./ui/overlay";
 import type { GameView } from "./ui/render";
@@ -52,6 +53,7 @@ export class Game {
   private readonly view: GameView;
   private readonly audio: AudioEngine;
   private readonly overlay: HandOverlay;
+  private readonly palmFilter = new OneEuroFilter2D({ freq: 30, minCutoff: 1.0, beta: 0.01 });
   private readonly animals: AnimalAsset[];
 
   private camera: Camera | null = null;
@@ -435,6 +437,45 @@ export class Game {
         delegate: this.engine?.delegate ?? "—",
       });
     }
+
+    // Thẻ con vật bám theo lòng bàn tay (trừ màn hình giới thiệu).
+    this.updateCardFollowPalm(timestamp);
+  }
+
+  /** Đưa thẻ con vật tới vị trí lòng bàn tay trên màn hình. */
+  private updateCardFollowPalm(timestamp: number): void {
+    const scene = this.view.card.parentElement as HTMLElement | null;
+    if (!scene) return;
+
+    if (this.mode !== "camera" || !this.engine || this.state === "INTRO") {
+      this.palmFilter.reset();
+      scene.style.transition = "";
+      scene.style.transform = "";
+      return;
+    }
+
+    const frame = this.engine.frame;
+    if (!frame) {
+      this.palmFilter.reset();
+      scene.style.transition = "";
+      scene.style.transform = "";
+      return;
+    }
+
+    const cover = computeCover(
+      frame.frameWidth,
+      frame.frameHeight,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    const px = cover.offsetX + frame.palm.x * frame.frameWidth * cover.scale;
+    const py = cover.offsetY + frame.palm.y * frame.frameHeight * cover.scale;
+    const filtered = this.palmFilter.filter(px, py, timestamp);
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const scale = Math.max(0.7, Math.min(1.3, frame.handSize / 120));
+    scene.style.transition = "transform 0.12s linear";
+    scene.style.transform = `translate3d(${filtered.x - centerX}px, ${filtered.y - centerY}px, 0) scale(${scale})`;
   }
 
   /** Đổi ảnh slot bằng crypto.getRandomValues, không lặp cùng con hai lần liền. */

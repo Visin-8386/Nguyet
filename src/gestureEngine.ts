@@ -70,16 +70,18 @@ export function analyzeHand(landmarks: readonly Point[]): { isOpen: boolean; isF
   let curled = 0;
   for (const [pip, tip] of fingers) {
     const ratio = distance(landmarks[tip], wrist) / Math.max(distance(landmarks[pip], wrist), 1e-6);
-    if (ratio > 1.12) extended += 1;
-    if (ratio < 0.9) curled += 1;
+    if (ratio > 1.05) extended += 1;
+    if (ratio < 0.95) curled += 1;
   }
   const thumbRatio = distance(landmarks[4], wrist) / Math.max(distance(landmarks[2], wrist), 1e-6);
-  const thumbExtended = thumbRatio > 1.15;
-  const thumbCurled = thumbRatio < 0.95;
+  const thumbExtended = thumbRatio > 1.05;
+  const thumbCurled = thumbRatio < 1.0;
 
   return {
-    isOpen: extended === 4 && thumbExtended,
-    isFist: curled === 4 && thumbCurled,
+    // Xòe: ít nhất 3 ngón duỗi, ngón cái duỗi, không quá 1 ngón co.
+    isOpen: extended >= 3 && thumbExtended && curled <= 1,
+    // Nắm: ít nhất 3 ngón co, ngón cái co, không có ngón nào duỗi rõ rệt.
+    isFist: curled >= 3 && thumbCurled && extended === 0,
   };
 }
 
@@ -311,7 +313,10 @@ export class GestureEngine {
 
     // Hysteresis: đang giữ cử chỉ nào thì chỉ cần score > exitScore để giữ,
     // nhờ vậy cử chỉ không bị nhấp nháy khi score dao động quanh ngưỡng.
-    if (this.current === "open" && category === "Open_Palm" && score >= GESTURE.exitScore) {
+    if (
+      this.current === "open" &&
+      ((category === "Open_Palm" && score >= GESTURE.exitScore) || frame.isOpen)
+    ) {
       raw = "open";
     } else if (
       category === "Open_Palm" &&
@@ -319,10 +324,12 @@ export class GestureEngine {
       (!reliableLandmarks || frame.isOpen)
     ) {
       raw = "open";
+    } else if (frame.isOpen && reliableLandmarks && score >= 0.35) {
+      // Fallback dựa trên landmark khi MediaPipe phân loại "None" do motion blur.
+      raw = "open";
     } else if (
       this.current === "fist" &&
-      category === "Closed_Fist" &&
-      score >= GESTURE.exitScore
+      ((category === "Closed_Fist" && score >= GESTURE.exitScore) || frame.isFist)
     ) {
       raw = "fist";
     } else if (
@@ -330,6 +337,9 @@ export class GestureEngine {
       score >= GESTURE.fistScore &&
       (!reliableLandmarks || frame.isFist)
     ) {
+      raw = "fist";
+    } else if (frame.isFist && reliableLandmarks && score >= 0.35) {
+      // Fallback dựa trên landmark khi MediaPipe phân loại "None".
       raw = "fist";
     }
 

@@ -72,6 +72,8 @@ export class SwipeDetector {
   private armed = true;
   private reversedSince: number | null = null;
   private lastEmitT = -Infinity;
+  /** Thời điểm gần nhất bàn tay còn mở (để chịu được motion blur ngắn). */
+  private lastOpenT = -Infinity;
 
   /** Chiều rộng khung hình (px) — đặt khi biết kích thước video. */
   private frameWidth: number;
@@ -97,18 +99,25 @@ export class SwipeDetector {
     this.anchor = null;
     this.armed = true;
     this.reversedSince = null;
+    this.lastOpenT = -Infinity;
     this.filter.reset();
   }
 
   /** Nhận 1 mẫu toạ độ; trả về kết quả vuốt nếu vừa hoàn thành một cú vuốt hợp lệ. */
   push(sample: SwipeSample): SwipeResult | null {
-    // Tay không mở → không thể là vuốt: xoá sạch và bỏ qua.
-    if (!sample.isOpen) {
+    const now = sample.t;
+
+    // Ghi nhận thời điểm bàn tay còn mở (chịu được motion blur ngắn).
+    if (sample.isOpen) this.lastOpenT = now;
+    // Grace 400ms: trong lúc vuốt nhanh, landmark open có thể bị mất tạm thời
+    // mà không nên huỷ toàn bộ theo dõi.
+    const effectivelyOpen = sample.isOpen || now - this.lastOpenT <= 400;
+
+    // Tay thực sự nắm (không mở và quá grace) → không thể là vuốt: xoá sạch.
+    if (!effectivelyOpen) {
       this.reset();
       return null;
     }
-
-    const now = sample.t;
     const f = this.filter.filter(sample.x, sample.y, now);
     this.buffer.push({ t: now, x: f.x, y: f.y });
     while (this.buffer.length > 0 && this.buffer[0].t < now - this.cfg.bufferMs) {
