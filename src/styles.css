@@ -766,6 +766,10 @@ body.no-camera #overlay-canvas {
   justify-content: center;
   gap: 7px;
 }
+/* Ẩn các nút công cụ, chỉ giữ "Chơi lại". */
+.toolbar > button:not(#btn-replay) {
+  display: none;
+}
 
 .btn-tool {
   padding: 7px 12px;
