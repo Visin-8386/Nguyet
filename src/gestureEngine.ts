@@ -341,7 +341,7 @@ export class GestureEngine {
     } else if (frame.isFist && reliableLandmarks && score >= 0.35) {
       // Fallback dựa trên landmark khi MediaPipe phân loại "None".
       raw = "fist";
-    } else if (reliableLandmarks && !frame.isOpen && category !== "Open_Palm" && score >= 0.3) {
+    } else if (reliableLandmarks && !frame.isOpen && category !== "Open_Palm" && score >= 0.2) {
       // Fallback mềm: tay không xòe và model không nói "Open_Palm" → coi như nắm.
       raw = "fist";
     }
