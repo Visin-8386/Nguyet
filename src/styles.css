@@ -491,11 +491,7 @@ body.no-camera #overlay-canvas {
 
 .top-bar {
   flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: 44px;
+  display: none;
 }
 
 .hand-indicator {
@@ -736,7 +732,7 @@ body.no-camera #overlay-canvas {
 }
 
 .guide {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 9px;
   max-width: min(720px, 100%);
