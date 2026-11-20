@@ -622,21 +622,21 @@ export class Game {
 
   /** Cập nhật zoom qua `zoom` nếu trình duyệt hỗ trợ, nấc chúng luôn. */
   private setZoom(value: number): void {
-    this.zoom = value;
-    this.view.video.style.transform = `scale(${value})`;
-    if (this.zoomLabel) this.zoomLabel.textContent = `Zoom ${Math.round(value * 100)}%`;
+    this.zoom = value / 100; // value = 50..160% (50 = rộng, 100 = chuẩn, 160 = gần)
+    this.view.video.style.transform = `scale(${this.zoom})`;
+    if (this.zoomLabel) this.zoomLabel.textContent = `Zoom ${value}%`;
     const track = (this.view.video.srcObject as MediaStream | null)?.getVideoTracks()[0];
-    if (track && (track as unknown as { zoom?: number }).zoom !== undefined) {
+    const t = track as unknown as
+      | {
+          applyConstraints?: (c: Record<string, unknown>) => Promise<unknown>;
+        }
+      | undefined;
+    if (t && t.applyConstraints) {
       try {
-        (
-          track as unknown as {
-            applyConstraints?: (c: Record<string, unknown>) => Promise<unknown>;
-          }
-        ).applyConstraints?.({
-          zoom: Math.round(value * 100),
-        });
+        // applyConstraints zoom: 0.5 = rộng, 1.0 = chuẩn, 2.0 = gần (hardware zoom).
+        t.applyConstraints({ zoom: Math.max(0.5, Math.min(2, this.zoom)) });
       } catch {
-        // Bỏ qua nếu trình duyệt không hỗ trợ zoom thật.
+        // Bỏ qua nếu trình duyệt/camera không hỗ trợ zoom thật.
       }
     }
   }
