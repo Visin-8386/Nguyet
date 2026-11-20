@@ -639,7 +639,7 @@ body.no-camera #overlay-canvas {
 .idle-hint {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;

@@ -1,5 +1,5 @@
 /* eslint-disable */
-const CACHE = "nguyet-v3";
+const CACHE = "nguyet-v5";
 const HEAVY = ["/models/", "/wasm/"];
 
 self.addEventListener("install", (event) => {
