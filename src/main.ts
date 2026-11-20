@@ -44,7 +44,9 @@ let busy = false;
 overlay.setEnabled(true);
 view.confetti.setEnabled(!prefersReducedMotion());
 view.setSoundMuted(audio.muted);
-view.showStart();
+// Vào thẳng camera: bắt đầu game chế độ camera ngay sau khi DOM sẵn sàng.
+// (Lưu ý: trên di động, browser cần cử chỉ của người dùng để mở camera — lúc đó xuất câu thông báo.)
+void startGame(true);
 
 /* ------------------------------------------------------------------ */
 /* Cảnh báo trình duyệt nhúng trong app (Zalo, Facebook, Messenger…)    */
