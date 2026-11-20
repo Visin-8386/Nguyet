@@ -514,11 +514,13 @@ export class Game {
     const px = cover.offsetX + frame.palm.x * frame.frameWidth * cover.scale;
     const py = cover.offsetY + frame.palm.y * frame.frameHeight * cover.scale;
     const filtered = this.palmFilter.filter(px, py, timestamp);
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const scale = Math.max(0.4, Math.min(0.8, frame.handSize / 200));
-    scene.style.transition = "transform 0.12s linear";
-    scene.style.transform = `translate3d(${filtered.x - centerX}px, ${filtered.y - centerY}px, 0) scale(${scale})`;
+    // Dùng vị trí thực của card-scene (không phải center màn hình) để bám lòng bàn tay chính xác.
+    const rect = scene.getBoundingClientRect();
+    const offsetX = filtered.x - (rect.left + rect.width / 2);
+    const offsetY = filtered.y - (rect.top + rect.height / 2);
+    const scale = Math.max(0.3, Math.min(0.7, frame.handSize / 300));
+    scene.style.transition = "transform 0.08s linear";
+    scene.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(${scale})`;
   }
 
   /** Đổi ảnh slot bằng crypto.getRandomValues, không lặp cùng con hai lần liền. */
