@@ -53,7 +53,12 @@ export class Game {
   private readonly view: GameView;
   private readonly audio: AudioEngine;
   private readonly overlay: HandOverlay;
-  private readonly palmFilter = new OneEuroFilter2D({ freq: 30, minCutoff: 1.0, beta: 0.01 });
+  private readonly palmFilter = new OneEuroFilter2D({
+    freq: 45,
+    minCutoff: 0.7,
+    beta: 0.03,
+    dCutoff: 2,
+  });
   private readonly animals: AnimalAsset[];
 
   private camera: Camera | null = null;
