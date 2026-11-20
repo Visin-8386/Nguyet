@@ -134,12 +134,12 @@ export class SwipeDetector {
     const velocityHandsPerSec = Math.abs(vxPerMs * 1000) / handSize;
 
     if (this.state === "idle") {
-      // Cần "giãn tay" lại một chút sau cú vuốt trước mới cho phép cú mới (tránh 1 cú bị đếm 2 lần).
+      // Cần "giãn tay" lại một chút sau cú vuốt trước mới cho phép cú mới.
       if (!this.armed) {
         if (velocityHandsPerSec < this.cfg.velocityHandsPerSec * 0.4) this.armed = true;
         return null;
       }
-      // Bắt đầu theo dõi ngay (không đòi vận tốc lớn) để vuốt chậm cũng nhận.
+      // Bắt đầu theo dõi ngay khi được phép — chờ để thấy quả lớn mới tính.
       this.state = "tracking";
       this.anchor = { t: now, x: f.x, y: f.y };
       this.dir = 0;

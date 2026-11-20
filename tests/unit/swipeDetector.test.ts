@@ -101,7 +101,7 @@ describe("SwipeDetector", () => {
       startX: 100,
       dxPerStep: 14,
       steps: 12,
-      handSize: 1000,
+      handSize: 2000,
     });
     expect(results).toHaveLength(0);
   });

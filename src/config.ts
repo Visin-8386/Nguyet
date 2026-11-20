@@ -44,21 +44,21 @@ export const SWIPE = {
   /** Cửa sổ thời gian tối đa cho một cú vuốt (ms). */
   windowMs: 800,
   /** Thời gian tối thiểu của một cú vuốt (ms) — tránh nhiễu 1 frame. */
-  minDurationMs: 100,
+  minDurationMs: 60,
   /** Quãng đường ngang phải >= 0.3 lần kích thước bàn tay (rất dễ kéo). */
-  minHandSizeRatio: 0.2,
+  minHandSizeRatio: 0.1,
   /** ...và >= 15% chiều rộng khung hình. */
-  minFrameRatio: 0.15,
+  minFrameRatio: 0.05,
   /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.1 "bàn tay/giây". */
-  velocityHandsPerSec: 0.1,
+  velocityHandsPerSec: 0.05,
   /** Điều kiện vuốt ngang: |dy| <= 0.5 * |dx|. */
-  dyRatioMax: 0.5,
+  dyRatioMax: 0.6,
   /** Nghỉ giữa 2 cú vuốt (ms). */
-  cooldownMs: 400,
+  cooldownMs: 300,
   /** Giữ lịch sử mẫu trong 800ms. */
   bufferMs: 800,
   /** Tham số One Euro Filter làm mượt toạ độ. */
-  oneEuro: { freq: 30, minCutoff: 1.2, beta: 0.02 },
+  oneEuro: { freq: 30, minCutoff: 0.4, beta: 0.004 },
 };
 
 export const CAMERA = {
