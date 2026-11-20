@@ -150,6 +150,7 @@ export class GameView {
 
   /** Hiển thị ảnh con vật trong lúc quay số (slot). */
   showSlot(animal: AnimalAsset): void {
+    this.card.classList.remove("is-idle", "is-mystery");
     this.animalImage.src = animal.animal;
     this.animalImage.alt = animal.label;
     this.animalName.textContent = animal.label;
