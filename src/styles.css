@@ -538,6 +538,9 @@ body.no-camera #overlay-canvas {
     opacity 0.35s ease,
     transform 0.45s ease;
 }
+.card-scene.is-hidden {
+  display: none;
+}
 
 .card {
   position: relative;

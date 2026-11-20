@@ -54,6 +54,7 @@ export class GameView {
   readonly video = must<HTMLVideoElement>("camera-video");
   readonly game = must<HTMLElement>("game");
   readonly card = must<HTMLElement>("card");
+  readonly cardScene = must<HTMLElement>("card-scene");
   readonly cardArea = must<HTMLElement>("card-area");
   readonly animalImage = must<HTMLImageElement>("animal-image");
   readonly animalName = must<HTMLElement>("animal-name");

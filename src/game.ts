@@ -418,13 +418,15 @@ export class Game {
     const hasHand = this.mode === "keyboard" || !!this.engine?.handDetected;
     if (this.state === "SPINNING") {
       if (hasHand) {
+        this.view.cardScene.classList.remove("is-hidden");
         if (timestamp - this.lastSlotAt >= GAME.slotMs) {
           this.lastSlotAt = timestamp;
           this.spinOnce();
         }
       } else {
-        // Không có tay → không hiện ảnh random, giữ thẻ trống.
-        this.view.showIdle();
+        // Không có tay → ẩn hoàn toàn thẻ (như camera bình thường).
+        this.view.cardScene.classList.add("is-hidden");
+        this.view.cardScene.classList.remove("is-idle", "is-mystery");
       }
     }
 
