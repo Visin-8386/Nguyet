@@ -95,13 +95,6 @@ export class Game {
   private lowResTried = false;
 
   private wakeLock: WakeLockSentinel | null = null;
-  private zoom = 1;
-  private readonly zoomEl = document.getElementById("cam-zoom");
-  private readonly zoomSlider = document.getElementById(
-    "cam-zoom-range",
-  ) as HTMLInputElement | null;
-  private readonly zoomLabel = document.getElementById("cam-zoom-label");
-
   private constructor(
     view: GameView,
     audio: AudioEngine,
@@ -168,16 +161,13 @@ export class Game {
         this.state = "WAITING";
         this.view.setState("WAITING");
         this.view.showIdle();
-        this.showZoomControls();
+
         await this.requestWakeLock();
       } else {
         this.mode = "keyboard";
         document.body.classList.add("no-camera");
         this.view.setCameraSwitchVisible(false);
         document.getElementById("dim")?.classList.add("hidden");
-        if (this.zoomEl) this.zoomEl.hidden = true;
-        this.zoom = 1;
-        this.view.video.style.transform = "";
       }
     } catch (error) {
       this.camera?.stop();
@@ -190,7 +180,7 @@ export class Game {
 
     this.bindInput();
     this.bindUi();
-    this.bindZoomControls();
+
     this.attachGlobalListeners();
     this.startLoop();
     this.started = true;
@@ -470,7 +460,6 @@ export class Game {
       this.evaluatePerformance();
     }
 
-    // Debug panel (chỉ cập nhật DOM khi mở)
     if (timestamp - this.lastDebugAt >= 300) {
       this.lastDebugAt = timestamp;
       this.view.updateDebug({
@@ -605,51 +594,6 @@ export class Game {
   private applyOverlayEnabled(): void {
     this.overlay.setEnabled(this.skeletonEnabled && this.perfLevel < 3);
     if (this.perfLevel >= 3) this.overlay.clear();
-  }
-
-  /** Hiển thị thanh zoom camera (chỉnh góc cam). */
-  private showZoomControls(): void {
-    if (!this.zoomEl) return;
-    if (this.mode !== "camera" || !this.camera?.active) {
-      this.zoomEl.hidden = true;
-      this.zoom = 1;
-      return;
-    }
-    this.zoomEl.hidden = false;
-    if (this.zoomSlider) this.zoomSlider.value = String(Math.round(this.zoom * 100));
-    this.zoomSlider?.focus();
-  }
-
-  /** Cập nhật zoom qua `zoom` nếu trình duyệt hỗ trợ, nấc chúng luôn. */
-  private setZoom(value: number): void {
-    this.zoom = value / 100; // value = 50..160% (50 = rộng, 100 = chuẩn, 160 = gần)
-    if (this.zoomLabel) this.zoomLabel.textContent = `Zoom ${value}%`;
-    const track = (this.view.video.srcObject as MediaStream | null)?.getVideoTracks()[0];
-    const t = track as unknown as
-      | {
-          applyConstraints?: (c: Record<string, unknown>) => Promise<unknown>;
-        }
-      | undefined;
-    if (t && t.applyConstraints) {
-      try {
-        // applyConstraints zoom: 0.5 = rộng, 1.0 = chuẩn, 2.0 = gần (hardware zoom).
-        t.applyConstraints({ zoom: Math.max(0.5, Math.min(2, this.zoom)) });
-      } catch {
-        // Bỏ qua nếu trình duyệt/camera không hỗ trợ zoom thật.
-      }
-    }
-  }
-
-  private bindZoomControls(): void {
-    if (!this.zoomEl || !this.zoomSlider) return;
-    this.zoomSlider.addEventListener("input", (e) => {
-      const target = e.target as HTMLInputElement;
-      this.setZoom(Number(target.value) / 100);
-    });
-    this.zoomSlider.addEventListener("change", () => {
-      const target = this.zoomSlider as HTMLInputElement;
-      this.setZoom(Number(target.value) / 100);
-    });
   }
 
   private async switchCamera(): Promise<void> {
