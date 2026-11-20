@@ -61,9 +61,8 @@ test("luồng chơi đầy đủ: chờ → quay → bắt → lật → giới 
   await page.keyboard.press("Space");
   await expect(page.locator("#game")).toHaveAttribute("data-state", "REVEAL");
 
-  // "Chơi lại" luôn khả dụng
-  await page.locator("#btn-replay").click();
-  await expect(page.locator("#game")).toHaveAttribute("data-state", "SPINNING");
+  // Nút công cụ ẩn (tối giản UI)
+  expect(await page.locator("#btn-replay").isHidden()).toBe(true);
 
   expect(consoleErrors).toEqual([]);
 });
