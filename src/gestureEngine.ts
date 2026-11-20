@@ -252,7 +252,8 @@ export class GestureEngine {
       x: frame.palm.x * frame.frameWidth,
       y: frame.palm.y * frame.frameHeight,
       handSize: frame.handSize,
-      isOpen: frame.isOpen || this.lastCategory === "Open_Palm",
+      isOpen: true,
+      isFist: frame.isFist,
     });
     if (swipe) {
       this.emit({ type: "swipe", direction: swipe.direction, timestamp: now });

@@ -46,11 +46,11 @@ export const SWIPE = {
   /** Thời gian tối thiểu của một cú vuốt (ms) — tránh nhiễu 1 frame. */
   minDurationMs: 100,
   /** Quãng đường ngang phải >= 0.3 lần kích thước bàn tay (rất dễ kéo). */
-  minHandSizeRatio: 0.3,
-  /** ...và >= 10% chiều rộng khung hình. */
-  minFrameRatio: 0.1,
-  /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.3 "bàn tay/giây". */
-  velocityHandsPerSec: 0.3,
+  minHandSizeRatio: 0.2,
+  /** ...và >= 15% chiều rộng khung hình. */
+  minFrameRatio: 0.15,
+  /** Ngưỡng vận tốc để bắt đầu theo dõi vuốt: 0.1 "bàn tay/giây". */
+  velocityHandsPerSec: 0.1,
   /** Điều kiện vuốt ngang: |dy| <= 0.5 * |dx|. */
   dyRatioMax: 0.5,
   /** Nghỉ giữa 2 cú vuốt (ms). */

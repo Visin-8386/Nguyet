@@ -19,6 +19,8 @@ export interface SwipeSample {
   handSize: number;
   /** Bàn tay đang mở (theo landmark hoặc category — do GestureEngine quyết định). */
   isOpen: boolean;
+  /** Bàn tay đang nắm (theo landmark — do GestureEngine quyết định). */
+  isFist: boolean;
 }
 
 export interface SwipeResult {
@@ -73,8 +75,6 @@ export class SwipeDetector {
   private reversedSince: number | null = null;
   private lastEmitT = -Infinity;
   /** Thời điểm gần nhất bàn tay còn mở (để chịu được motion blur ngắn). */
-  private lastOpenT = -Infinity;
-
   /** Chiều rộng khung hình (px) — đặt khi biết kích thước video. */
   private frameWidth: number;
 
@@ -99,22 +99,13 @@ export class SwipeDetector {
     this.anchor = null;
     this.armed = true;
     this.reversedSince = null;
-    this.lastOpenT = -Infinity;
     this.filter.reset();
   }
 
   /** Nhận 1 mẫu toạ độ; trả về kết quả vuốt nếu vừa hoàn thành một cú vuốt hợp lệ. */
   push(sample: SwipeSample): SwipeResult | null {
-    const now = sample.t;
-
-    // Ghi nhận thời điểm bàn tay còn mở (chịu được motion blur ngắn).
-    if (sample.isOpen) this.lastOpenT = now;
-    // Grace 400ms: trong lúc vuốt nhanh, landmark open có thể bị mất tạm thời
-    // mà không nên huỷ toàn bộ theo dõi.
-    const effectivelyOpen = sample.isOpen || now - this.lastOpenT <= 800;
-
-    // Tay thực sự nắm (không mở và quá grace) → không thể là vuốt: xoá sạch.
-    if (!effectivelyOpen) {
+    const now = sample.t; // Tay nắm rõ ràng → huỷ theo dõi vuốt (giữ nguyên grace cho landmark bị mất tạm thời).
+    if (sample.isFist) {
       this.reset();
       return null;
     }

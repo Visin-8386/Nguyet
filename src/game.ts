@@ -200,8 +200,6 @@ export class Game {
         this.lastSwipeDir = event.direction === "right" ? "trái→phải" : "phải→trái";
         this.lastSwipeFromRight = event.direction === "left";
         console.log("[Game] SWIPE", event.direction, "state=", this.state);
-        this.view.game.classList.add("swipe-toast");
-        window.setTimeout(() => this.view.game.classList.remove("swipe-toast"), 800);
         // Nếu đang ở CAUGHT (chưa mở hộp), tự mở hộp rồi kéo poster luôn.
         if (this.state === "CAUGHT") {
           this.dispatch("OPEN");
@@ -418,9 +416,16 @@ export class Game {
 
     // Slot machine: chỉ quay khi có tay (chế độ camera) hoặc chế độ bàn phím.
     const hasHand = this.mode === "keyboard" || !!this.engine?.handDetected;
-    if (this.state === "SPINNING" && hasHand && timestamp - this.lastSlotAt >= GAME.slotMs) {
-      this.lastSlotAt = timestamp;
-      this.spinOnce();
+    if (this.state === "SPINNING") {
+      if (hasHand) {
+        if (timestamp - this.lastSlotAt >= GAME.slotMs) {
+          this.lastSlotAt = timestamp;
+          this.spinOnce();
+        }
+      } else {
+        // Không có tay → không hiện ảnh random, giữ thẻ trống.
+        this.view.showIdle();
+      }
     }
 
     // Timeout mất tay 8s (mọi trạng thái trừ INTRO)
