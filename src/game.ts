@@ -429,6 +429,12 @@ export class Game {
         this.view.cardScene.classList.remove("is-idle", "is-mystery");
       }
     }
+    // Ẩn thẻ nếu bất kỳ trạng thái nào cũng không có tay (trừ REVEAL — giữ ảnh đã lật).
+    if (this.mode === "camera" && !hasHand && this.state !== "REVEAL") {
+      this.view.cardScene.classList.add("is-hidden");
+    } else if (this.mode === "camera" && hasHand) {
+      this.view.cardScene.classList.remove("is-hidden");
+    }
 
     // Timeout mất tay 8s (mọi trạng thái trừ INTRO)
     if (
