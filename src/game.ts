@@ -623,7 +623,6 @@ export class Game {
   /** Cập nhật zoom qua `zoom` nếu trình duyệt hỗ trợ, nấc chúng luôn. */
   private setZoom(value: number): void {
     this.zoom = value / 100; // value = 50..160% (50 = rộng, 100 = chuẩn, 160 = gần)
-    this.view.video.style.transform = `scale(${this.zoom})`;
     if (this.zoomLabel) this.zoomLabel.textContent = `Zoom ${value}%`;
     const track = (this.view.video.srcObject as MediaStream | null)?.getVideoTracks()[0];
     const t = track as unknown as
