@@ -34,7 +34,14 @@ export class AudioEngine {
       }
     }
     try {
-      if (this.ctx.state === "suspended") await this.ctx.resume();
+      if (this.ctx.state === "suspended") {
+        // Không để resume() treo vô hạn (auto-start desktop không có cử chỉ người dùng).
+        // Nếu trình duyệt chặn audio, cứ tiếp tục — camera/game vẫn chạy bình thường.
+        await Promise.race([
+          this.ctx.resume(),
+          new Promise<void>((resolve) => window.setTimeout(resolve, 600)),
+        ]);
+      }
     } catch {
       // Bỏ qua: một số trình duyệt vẫn chặn cho tới lần tương tác kế tiếp.
     }

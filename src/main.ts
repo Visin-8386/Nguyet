@@ -182,8 +182,9 @@ async function startGame(withCamera: boolean): Promise<void> {
   hideErrorScreen();
 
   try {
-    // Phải gọi trong chính sự kiện click để iOS cho phép phát âm thanh.
-    await audio.unlock();
+    // Gọi unlock trong sự kiện click (iOS) nhưng KHÔNG await — audio có thể bị chặn
+    // vô hạn trên desktop auto-start; không được làm kẹt luồng mở camera.
+    void audio.unlock();
 
     if (!game) {
       view.showLoading("Đang tải hình con vật…");
